@@ -1,0 +1,29 @@
+<div class="container">
+  <ul
+    class="task-parent px-0 py-3 d-flex gap-3 flex-wrap align-items-start justify-content-start"
+  >
+    <li class="task-item card p-2 d-inline-flex" *ngFor="let task of taskList">
+      <div
+        class="title-section d-flex align-items-start justify-content-between pb-1 mb-1"
+        [ngClass]="{
+          'border-done': task.status === 'Done',
+          'border-progress': task.status === 'In Progress',
+          'border-todo': task.status === 'To Do'
+        }"
+      >
+        <div class="task-title">{{ task.title }}</div>
+        <div class="task-status" title="{{ task.status }}">
+          <span class="status-symbol rounded-2 text-end">{{
+            task.status
+          }}</span>
+        </div>
+      </div>
+      <div class="desc-section d-flex align-items-start">
+        <div class="task-description">{{ task.description }}</div>
+        <div class="actions mb-0 mt-auto">
+          <span class="action-dots rounded-circle"></span>
+        </div>
+      </div>
+    </li>
+  </ul>
+</div>

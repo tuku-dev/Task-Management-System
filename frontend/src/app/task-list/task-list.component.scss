@@ -1,0 +1,70 @@
+.task-parent {
+  // column-count: 4;
+  .task-item {
+    white-space: normal;
+    // display: inline-block;
+    width: 100%;
+    max-width: 300px;
+    .title-section {
+      &.border {
+        &-done {
+          border-bottom: 2px solid var(--bs-gray-500);
+        }
+        &-progress {
+          border-bottom: 2px solid var(--bs-warning);
+        }
+        &-todo {
+          border-bottom: 2px solid var(--bs-green);
+        }
+      }
+      .task-title {
+        padding-right: 5px;
+        flex: 1 1 0;
+        font-size: 16px;
+        font-weight: 500;
+      }
+      .task-status {
+        flex: 60px 0 0;
+        .status-symbol {
+          display: block;
+          // width: 10px;
+          // height: 10px;
+          cursor: pointer;
+          font-size: 12px;
+        }
+      }
+    }
+    .desc-section {
+      .task-description {
+        flex: 1 1 0;
+        min-height: 110px;
+        padding-right: 5px;
+        font-size: 14px;
+        font-weight: 400;
+      }
+      .actions {
+        position: relative;
+        background-color: #eee;
+        height: 25px;
+        flex: 14px 0 0;
+        cursor: pointer;
+        border-radius: 3px;
+        transition: 0.3s ease-in-out;
+        &:hover {
+          background-color: #ddd;
+        }
+        .action-dots {
+          position: absolute;
+          width: 4px;
+          height: 4px;
+          background-color: var(--bs-gray);
+          box-shadow:
+            0px 6px 0 0px var(--bs-gray),
+            0px 12px 0 0px var(--bs-gray);
+          top: 4px;
+          left: 5px;
+        }
+      }
+    }
+  }
+}
