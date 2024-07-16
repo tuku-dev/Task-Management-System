@@ -1,29 +1,64 @@
-<div class="container">
-  <ul
-    class="task-parent px-0 py-3 d-flex gap-3 flex-wrap align-items-start justify-content-start"
-  >
-    <li class="task-item card p-2 d-inline-flex" *ngFor="let task of taskList">
-      <div
-        class="title-section d-flex align-items-start justify-content-between pb-1 mb-1"
-        [ngClass]="{
-          'border-done': task.status === 'Done',
-          'border-progress': task.status === 'In Progress',
-          'border-todo': task.status === 'To Do'
-        }"
+<div class="main-wrapper py-3" style="background-color: var(--bs-gray-300)">
+  <div class="header border-bottom mb-2 pb-2">
+    <div class="container">
+      <div class="d-flex align-items-center justify-content-between">
+        <h1 class="heading-1">Task Management</h1>
+        <div
+          class="add-task-button d-flex align-items-center justify-content-center"
+        >
+          <span class="plus p-3 rounded-circle bg-dark" (click)="addTask()">
+            <img src="./plus.png" alt="Add task" class="img-fluid" />
+          </span>
+          <span
+            class="text rounded-2 bg-dark text-white ps-4 pe-3 py-2"
+            (click)="addTask()"
+            >Add Task</span
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    <ul
+      class="task-parent px-0 py-3 d-flex gap-3 flex-wrap align-items-start justify-content-start"
+    >
+      <li
+        class="task-item card shadow-sm p-2 d-inline-flex"
+        *ngFor="let task of taskList"
       >
-        <div class="task-title">{{ task.title }}</div>
-        <div class="task-status" title="{{ task.status }}">
-          <span class="status-symbol rounded-2 text-end">{{
-            task.status
-          }}</span>
+        <div
+          class="title-section d-flex align-items-start justify-content-between pb-1 mb-1"
+          [ngClass]="{
+            'border-done': task.status === 'Done',
+            'border-progress': task.status === 'In Progress',
+            'border-todo': task.status === 'To Do'
+          }"
+        >
+          <div class="task-title">{{ task.title }}</div>
+          <div class="task-status" title="{{ task.status }}">
+            <span class="status-symbol rounded-2 text-end">{{
+              task.status
+            }}</span>
+          </div>
         </div>
-      </div>
-      <div class="desc-section d-flex align-items-start">
-        <div class="task-description">{{ task.description }}</div>
-        <div class="actions mb-0 mt-auto">
-          <span class="action-dots rounded-circle"></span>
+        <div class="desc-section d-flex align-items-start">
+          <div class="task-description">{{ task.description }}</div>
+          <div class="actions mb-0 mt-auto" (click)="toggleActions(task._id)">
+            <span class="action-dots rounded-circle"></span>
+            <div
+              class="action-list"
+              *ngIf="openAction === task._id && clicked !== 0"
+            >
+              <span class="action-icon edit">
+                <img src="./edit.png" alt="Edit Task" />
+              </span>
+              <span class="action-icon delete">
+                <img src="./delete.png" alt="Delete Task" />
+              </span>
+            </div>
+          </div>
         </div>
-      </div>
-    </li>
-  </ul>
+      </li>
+    </ul>
+  </div>
 </div>

@@ -1,3 +1,21 @@
+.header {
+  .add-task-button {
+    .plus {
+      max-width: 60px;
+      padding: 5px;
+      img {
+        filter: invert(100%);
+        cursor: pointer;
+      }
+    }
+    .text {
+      font-size: 22px;
+      margin-left: -20px;
+      line-height: 1;
+      cursor: pointer;
+    }
+  }
+}
 .task-parent {
   // column-count: 4;
   .task-item {
@@ -35,6 +53,7 @@
       }
     }
     .desc-section {
+      position: relative;
       .task-description {
         flex: 1 1 0;
         min-height: 110px;
@@ -63,6 +82,22 @@
             0px 12px 0 0px var(--bs-gray);
           top: 4px;
           left: 5px;
+        }
+      }
+      .action-list {
+        position: absolute;
+        bottom: 30px;
+        right: 0px;
+        .action-icon {
+          display: block;
+          cursor: pointer;
+          &.edit {
+            margin-bottom: 5px;
+          }
+          img {
+            max-width: 16px;
+            display: block;
+          }
         }
       }
     }
