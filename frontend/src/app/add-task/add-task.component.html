@@ -1,1 +1,54 @@
-<p>add-task works!</p>
+<div class="task-form-container p-3">
+  <h4 class="mb-3 modal-title px-2">Add Task</h4>
+  <form class="form" [formGroup]="addTaskForm">
+    <div class="title-container mb-3">
+      <input
+        type="text"
+        class="form-control"
+        name="title"
+        id="title"
+        placeholder="Task Title"
+        formControlName="title"
+      />
+    </div>
+    <div class="status-container mb-3">
+      <select
+        name="status"
+        id="status"
+        class="form-select"
+        formControlName="status"
+      >
+        <option value="To Do">To Do</option>
+        <option value="In Progress">In Progress</option>
+        <option value="Done">Done</option>
+      </select>
+    </div>
+    <div class="description-container mb-3">
+      <textarea
+        name="description"
+        id="description"
+        placeholder="Description..."
+        class="form-control"
+        formControlName="description"
+      ></textarea>
+    </div>
+    <div
+      class="button-container d-flex align-items-center justify-content-end gap-3"
+    >
+      <button
+        type="button"
+        class="form-cancel rounded-1 px-3 py-1"
+        (click)="cancelForm()"
+      >
+        Cancel
+      </button>
+      <button
+        type="button"
+        class="form-submit rounded-1 px-3 py-1"
+        (click)="submitForm()"
+      >
+        Add
+      </button>
+    </div>
+  </form>
+</div>

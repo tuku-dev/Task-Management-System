@@ -24,7 +24,7 @@
     >
       <li
         class="task-item card shadow-sm p-2 d-inline-flex"
-        *ngFor="let task of taskList"
+        *ngFor="let task of taskList; let i = index"
       >
         <div
           class="title-section d-flex align-items-start justify-content-between pb-1 mb-1"
@@ -49,10 +49,10 @@
               class="action-list"
               *ngIf="openAction === task._id && clicked !== 0"
             >
-              <span class="action-icon edit">
+              <span class="action-icon edit" (click)="updateTask(task)">
                 <img src="./edit.png" alt="Edit Task" />
               </span>
-              <span class="action-icon delete">
+              <span class="action-icon delete" (click)="deleteTask(i)">
                 <img src="./delete.png" alt="Delete Task" />
               </span>
             </div>

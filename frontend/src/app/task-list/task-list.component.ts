@@ -383,6 +383,7 @@ export class TaskListComponent {
     let modalRef = this.modalService.open(AddTaskComponent, {
       centered: true,
     });
+    modalRef.componentInstance.taskData = {};
     modalRef.result.then(
       (result) => {
         console.log(result);
@@ -390,4 +391,22 @@ export class TaskListComponent {
       () => {}
     );
   }
+
+  updateTask(task: any) {
+    let modalRef = this.modalService.open(AddTaskComponent, {
+      centered: true,
+    });
+    modalRef.componentInstance.taskData = {
+      title: task.title,
+      status: task.status,
+      description: task.description,
+    };
+    modalRef.result.then(
+      (result) => {
+        console.log(result);
+      },
+      () => {}
+    );
+  }
+  deleteTask(index: number) {}
 }

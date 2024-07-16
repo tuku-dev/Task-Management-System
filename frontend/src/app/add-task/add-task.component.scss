@@ -1,0 +1,28 @@
+.task-form-container {
+  background: var(--bs-warning-border-subtle);
+  border-radius: 10px;
+  .form-control,
+  .form-select {
+    outline: none;
+    border: none;
+    box-shadow: none;
+    background-color: transparent;
+    border-bottom: 1px solid rgba(169, 169, 169, 40%);
+    border-radius: 0;
+  }
+  textarea.form-control {
+    min-height: 100px;
+  }
+  .button-container {
+    .form-cancel {
+      border: 1px solid var(--bs-secondary);
+      background-color: transparent;
+      font-size: 14px;
+    }
+    .form-submit {
+      background-color: #f3bf23;
+      border: 1px solid #f3bf23;
+      font-size: 14px;
+    }
+  }
+}
