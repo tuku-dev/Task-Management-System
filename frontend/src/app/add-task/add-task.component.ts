@@ -18,24 +18,8 @@ export class AddTaskComponent implements OnInit {
   @Input() taskData: any;
   addTaskForm: FormGroup | any;
   submitted = false;
-  responsive = [
-    {
-      minScreenWidth: 1400,
-      itemCount: 4,
-    },
-    {
-      minScreenWidth: 992,
-      itemCount: 3,
-    },
-    {
-      minScreenWidth: 768,
-      itemCount: 2,
-    },
-  ];
 
-  constructor(public fb: FormBuilder, public dialogRef: NgbActiveModal) {
-    
-  }
+  constructor(public fb: FormBuilder, public dialogRef: NgbActiveModal) {}
 
   ngOnInit(): void {
     console.log(this.taskData);
