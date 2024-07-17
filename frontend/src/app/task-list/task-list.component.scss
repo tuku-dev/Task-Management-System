@@ -4,32 +4,63 @@ $progress1: #fff7e8;
 $progress2: #d9bb5e;
 $todo1: #f9e6e8;
 $todo2: #fba0a8;
+$radio: #057187;
 
 .header {
   .add-task-button {
     .plus {
-      max-width: 60px;
-      padding: 5px;
+      width: 50px;
+      height: 50px;
+      padding: 10px;
       img {
         filter: invert(100%);
         cursor: pointer;
       }
     }
     .text {
-      font-size: 22px;
-      margin-left: -20px;
+      font-size: 16px;
+      margin-left: -15px;
       line-height: 1;
       cursor: pointer;
     }
   }
 }
+.radio-group {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  .radio-label {
+    padding: 2px 8px;
+    border: 1px solid $radio;
+    text-align: center;
+    color: $radio;
+    border-radius: 5px 0 0 5px;
+    ~ .radio-label {
+      border-left: 0;
+      border-radius: 0;
+      &:last-child {
+        border-radius: 0 5px 5px 0;
+      }
+    }
+  }
+  .input-radio:checked + .radio-label {
+    background-color: $radio;
+    color: var(--bs-white);
+  }
+}
 .task-parent {
-  // column-count: 4;
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  @media (min-width: 992px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  @media (min-width: 1400px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
   .task-item {
     white-space: normal;
-    // display: inline-block;
     width: 100%;
-    max-width: 300px;
     &.bg {
       &-done {
         background-color: $done1;
@@ -45,17 +76,6 @@ $todo2: #fba0a8;
       }
     }
     .title-section {
-      &.border {
-        &-done {
-          border-bottom: 1px solid $done2;
-        }
-        &-progress {
-          border-bottom: 1px solid $progress2;
-        }
-        &-todo {
-          border-bottom: 1px solid $todo2;
-        }
-      }
       .task-title {
         padding-right: 5px;
         flex: 1 1 0;
@@ -67,7 +87,7 @@ $todo2: #fba0a8;
       position: relative;
       .task-description {
         flex: 1 1 0;
-        min-height: 110px;
+        // min-height: 110px;
         padding-right: 5px;
         font-size: 14px;
         font-weight: 400;

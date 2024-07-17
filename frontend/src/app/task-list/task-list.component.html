@@ -6,11 +6,14 @@
         <div
           class="add-task-button d-flex align-items-center justify-content-center"
         >
-          <span class="plus p-3 rounded-circle bg-dark" (click)="addTask()">
+          <span
+            class="plus p-3 rounded-circle bg-dark d-flex align-items-center justify-content-center"
+            (click)="addTask()"
+          >
             <img src="./plus.png" alt="Add task" class="img-fluid" />
           </span>
           <span
-            class="text rounded-2 bg-dark text-white ps-4 pe-3 py-2"
+            class="text rounded-2 bg-dark text-white ps-4 pe-3 py-2 d-none d-xl-block"
             (click)="addTask()"
             >Add Task</span
           >
@@ -20,52 +23,76 @@
   </div>
   <div class="container">
     <div class="d-flex align-items-center justify-content-end task-filter">
-      <div
-        class="radio-group d-flex align-items-center justify-content-between gap-3"
-      >
-        <label for="all" class="input-radio">
-          <input type="radio" name="all" id="all" value="" /> All
-        </label>
-        <label for="todo" class="input-radio">
-          <input type="radio" name="todo" id="todo" value="todo" /> Todo
-        </label>
-        <label for="progress" class="input-radio">
-          <input type="radio" name="progress" id="progress" value="progress" />
-          Progress
-        </label>
-        <label for="done" class="input-radio">
-          <input type="radio" name="done" id="done" value="done" /> Done
-        </label>
+      <div class="radio-group my-3">
+        <input
+          type="radio"
+          name="task-status"
+          id="all"
+          value="all"
+          class="d-none input-radio"
+          [(ngModel)]="taskSort"
+          (change)="sortTasks()"
+        />
+        <label for="all" class="radio-label"> All </label>
+        <input
+          type="radio"
+          name="task-status"
+          id="todo"
+          value="todo"
+          [(ngModel)]="taskSort"
+          class="d-none input-radio"
+          (change)="sortTasks()"
+        />
+        <label for="todo" class="radio-label"> Todo </label>
+        <input
+          type="radio"
+          name="task-status"
+          id="progress"
+          value="progress"
+          [(ngModel)]="taskSort"
+          class="d-none input-radio"
+          (change)="sortTasks()"
+        />
+        <label for="progress" class="radio-label"> Progress </label>
+        <input
+          type="radio"
+          name="task-status"
+          id="done"
+          value="done"
+          [(ngModel)]="taskSort"
+          class="d-none input-radio"
+          (change)="sortTasks()"
+        />
+        <label for="done" class="radio-label"> Done </label>
       </div>
     </div>
-    <ul
-      class="task-parent px-0 py-3 d-flex gap-3 flex-wrap align-items-start justify-content-start"
-    >
+    <ul class="task-parent px-0 py-3 d-grid gap-3 flex-wrap">
       <li
         class="task-item card shadow-sm p-2 d-inline-flex"
-        *ngFor="let task of taskList; let i = index"
+        *ngFor="let task of sortedList; let i = index"
         [ngClass]="{
           'bg-done': task.status === 'Done',
           'bg-progress': task.status === 'In Progress',
           'bg-todo': task.status === 'To Do'
         }"
-        (click)="updateTask(task)"
       >
-        <div
-          class="title-section pb-1 mb-1"
-          [ngClass]="{
-            'border-done': task.status === 'Done',
-            'border-progress': task.status === 'In Progress',
-            'border-todo': task.status === 'To Do'
-          }"
-        >
+        <div class="title-section pb-1 mb-1" (click)="updateTask(task)">
           <div class="task-title">{{ task.title }}</div>
         </div>
-        <div class="desc-section d-flex align-items-start">
+        <div
+          class="desc-section d-flex align-items-start mb-2"
+          (click)="updateTask(task)"
+        >
           <div class="task-description">{{ task.description }}</div>
         </div>
-        <div class="footer d-flex align-items-center justify-content-between">
-          <div class="task-status" title="{{ task.status }}">
+        <div
+          class="footer mt-auto d-flex align-items-center justify-content-between"
+        >
+          <div
+            class="task-status"
+            title="{{ task.status }}"
+            (click)="updateTask(task)"
+          >
             <span class="status-symbol rounded-2 text-end">{{
               task.status
             }}</span>

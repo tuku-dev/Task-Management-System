@@ -1,25 +1,24 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, NgModule } from '@angular/core';
 import { AddTaskComponent } from '../add-task/add-task.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-task-list',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './task-list.component.html',
   styleUrl: './task-list.component.scss',
 })
 export class TaskListComponent {
   taskList = [{ _id: '', title: '', description: '', status: '' }];
+  sortedList = [{ _id: '', title: '', description: '', status: '' }];
   loader = true;
   prevAction = '';
   openAction: string | null = null;
   clicked = 0;
-  config = {
-    ignoreBackdropClick: true,
-    class: 'modal-dialog-centered',
-  };
+  taskSort = 'all';
 
   constructor(public modalService: NgbModal) {}
 
@@ -366,6 +365,7 @@ export class TaskListComponent {
         status: 'To Do',
       },
     ];
+    this.sortTasks();
   }
 
   toggleActions(taskId: string) {
@@ -379,11 +379,40 @@ export class TaskListComponent {
     }
   }
 
+  sortTasks() {
+    let sortFilter = '';
+    switch (this.taskSort) {
+      case 'todo':
+        sortFilter = 'To Do';
+        break;
+      case 'progress':
+        sortFilter = 'In Progress';
+        break;
+      case 'done':
+        sortFilter = 'Done';
+        break;
+      default:
+        sortFilter = 'all';
+        break;
+    }
+
+    this.sortedList = this.taskList.filter((task) => {
+      if (sortFilter === 'all') {
+        return true;
+      } else {
+        return task.status === sortFilter;
+      }
+    });
+  }
+
   addTask() {
     let modalRef = this.modalService.open(AddTaskComponent, {
       centered: true,
     });
-    modalRef.componentInstance.taskData = {};
+    modalRef.componentInstance.modalData = {
+      title: 'Add Task',
+      buttonText: 'Add',
+    };
     modalRef.result.then(
       (result) => {
         console.log(result);
@@ -396,10 +425,10 @@ export class TaskListComponent {
     let modalRef = this.modalService.open(AddTaskComponent, {
       centered: true,
     });
-    modalRef.componentInstance.taskData = {
-      title: task.title,
-      status: task.status,
-      description: task.description,
+    modalRef.componentInstance.modalData = {
+      title: 'Update Task',
+      buttonText: 'Update',
+      task,
     };
     modalRef.result.then(
       (result) => {

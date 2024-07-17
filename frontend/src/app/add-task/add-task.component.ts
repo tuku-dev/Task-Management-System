@@ -15,20 +15,22 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
   styleUrl: './add-task.component.scss',
 })
 export class AddTaskComponent implements OnInit {
-  @Input() taskData: any;
+  @Input() modalData: any;
   addTaskForm: FormGroup | any;
   submitted = false;
+  taskData: any;
 
   constructor(public fb: FormBuilder, public dialogRef: NgbActiveModal) {}
 
   ngOnInit(): void {
-    console.log(this.taskData);
+    console.log(this.modalData);
     this.addTaskForm = this.fb.group({
       title: [''],
       status: ['To Do'],
       description: [''],
     });
-    if (this.taskData) {
+    if (this.modalData.task && this.modalData.task._id) {
+      this.taskData = this.modalData.task;
       this.fillData();
     }
   }

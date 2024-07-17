@@ -1,5 +1,5 @@
 <div class="task-form-container p-3">
-  <h4 class="modal-title px-2">Add Task</h4>
+  <h4 class="modal-title px-2">{{ modalData.title }}</h4>
   <hr class="hr my-2" />
   <form class="form" [formGroup]="addTaskForm">
     <div class="title-container mb-3">
@@ -48,7 +48,7 @@
         class="button form-submit rounded-1 px-3 py-1"
         (click)="submitForm()"
       >
-        Add
+        {{ modalData.buttonText }}
       </button>
     </div>
   </form>
