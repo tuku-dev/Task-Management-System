@@ -1,5 +1,5 @@
 .task-form-container {
-  background: var(--bs-warning-border-subtle);
+  // background: var(--bs-warning-border-subtle);
   border-radius: 10px;
   .form-control,
   .form-select {
@@ -14,15 +14,17 @@
     min-height: 100px;
   }
   .button-container {
+    .button {
+      font-size: 14px;
+      width: 100px;
+    }
     .form-cancel {
       border: 1px solid var(--bs-secondary);
       background-color: transparent;
-      font-size: 14px;
     }
     .form-submit {
-      background-color: #f3bf23;
-      border: 1px solid #f3bf23;
-      font-size: 14px;
+      background-color: #b9ddff;
+      border: 1px solid #2395f3;
     }
   }
 }

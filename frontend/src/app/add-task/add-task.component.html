@@ -1,5 +1,6 @@
 <div class="task-form-container p-3">
-  <h4 class="mb-3 modal-title px-2">Add Task</h4>
+  <h4 class="modal-title px-2">Add Task</h4>
+  <hr class="hr my-2" />
   <form class="form" [formGroup]="addTaskForm">
     <div class="title-container mb-3">
       <input
@@ -37,14 +38,14 @@
     >
       <button
         type="button"
-        class="form-cancel rounded-1 px-3 py-1"
+        class="button form-cancel rounded-1 px-3 py-1"
         (click)="cancelForm()"
       >
         Cancel
       </button>
       <button
         type="button"
-        class="form-submit rounded-1 px-3 py-1"
+        class="button form-submit rounded-1 px-3 py-1"
         (click)="submitForm()"
       >
         Add

@@ -1,4 +1,4 @@
-<div class="main-wrapper py-3" style="background-color: var(--bs-gray-300)">
+<div class="main-wrapper py-3">
   <div class="header border-bottom mb-2 pb-2">
     <div class="container">
       <div class="d-flex align-items-center justify-content-between">
@@ -19,15 +19,40 @@
     </div>
   </div>
   <div class="container">
+    <div class="d-flex align-items-center justify-content-end task-filter">
+      <div
+        class="radio-group d-flex align-items-center justify-content-between gap-3"
+      >
+        <label for="all" class="input-radio">
+          <input type="radio" name="all" id="all" value="" /> All
+        </label>
+        <label for="todo" class="input-radio">
+          <input type="radio" name="todo" id="todo" value="todo" /> Todo
+        </label>
+        <label for="progress" class="input-radio">
+          <input type="radio" name="progress" id="progress" value="progress" />
+          Progress
+        </label>
+        <label for="done" class="input-radio">
+          <input type="radio" name="done" id="done" value="done" /> Done
+        </label>
+      </div>
+    </div>
     <ul
       class="task-parent px-0 py-3 d-flex gap-3 flex-wrap align-items-start justify-content-start"
     >
       <li
         class="task-item card shadow-sm p-2 d-inline-flex"
         *ngFor="let task of taskList; let i = index"
+        [ngClass]="{
+          'bg-done': task.status === 'Done',
+          'bg-progress': task.status === 'In Progress',
+          'bg-todo': task.status === 'To Do'
+        }"
+        (click)="updateTask(task)"
       >
         <div
-          class="title-section d-flex align-items-start justify-content-between pb-1 mb-1"
+          class="title-section pb-1 mb-1"
           [ngClass]="{
             'border-done': task.status === 'Done',
             'border-progress': task.status === 'In Progress',
@@ -35,18 +60,20 @@
           }"
         >
           <div class="task-title">{{ task.title }}</div>
+        </div>
+        <div class="desc-section d-flex align-items-start">
+          <div class="task-description">{{ task.description }}</div>
+        </div>
+        <div class="footer d-flex align-items-center justify-content-between">
           <div class="task-status" title="{{ task.status }}">
             <span class="status-symbol rounded-2 text-end">{{
               task.status
             }}</span>
           </div>
-        </div>
-        <div class="desc-section d-flex align-items-start">
-          <div class="task-description">{{ task.description }}</div>
           <div class="actions mb-0 mt-auto" (click)="toggleActions(task._id)">
             <span class="action-dots rounded-circle"></span>
             <div
-              class="action-list"
+              class="action-list p-2 rounded-2 shadow-sm"
               *ngIf="openAction === task._id && clicked !== 0"
             >
               <span class="action-icon edit" (click)="updateTask(task)">

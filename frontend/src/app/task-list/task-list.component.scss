@@ -1,3 +1,10 @@
+$done1: #e8fff4;
+$done2: #5ed9a0;
+$progress1: #fff7e8;
+$progress2: #d9bb5e;
+$todo1: #f9e6e8;
+$todo2: #fba0a8;
+
 .header {
   .add-task-button {
     .plus {
@@ -23,16 +30,30 @@
     // display: inline-block;
     width: 100%;
     max-width: 300px;
+    &.bg {
+      &-done {
+        background-color: $done1;
+        border-color: $done2;
+      }
+      &-progress {
+        background-color: $progress1;
+        border-color: $progress2;
+      }
+      &-todo {
+        background-color: $todo1;
+        border-color: $todo2;
+      }
+    }
     .title-section {
       &.border {
         &-done {
-          border-bottom: 2px solid var(--bs-gray-500);
+          border-bottom: 1px solid $done2;
         }
         &-progress {
-          border-bottom: 2px solid var(--bs-warning);
+          border-bottom: 1px solid $progress2;
         }
         &-todo {
-          border-bottom: 2px solid var(--bs-green);
+          border-bottom: 1px solid $todo2;
         }
       }
       .task-title {
@@ -40,16 +61,6 @@
         flex: 1 1 0;
         font-size: 16px;
         font-weight: 500;
-      }
-      .task-status {
-        flex: 60px 0 0;
-        .status-symbol {
-          display: block;
-          // width: 10px;
-          // height: 10px;
-          cursor: pointer;
-          font-size: 12px;
-        }
       }
     }
     .desc-section {
@@ -61,16 +72,25 @@
         font-size: 14px;
         font-weight: 400;
       }
+    }
+    .footer {
+      .task-status {
+        .status-symbol {
+          display: block;
+          cursor: pointer;
+          font-size: 12px;
+        }
+      }
       .actions {
         position: relative;
-        background-color: #eee;
+        // background-color: #eee;
         height: 25px;
         flex: 14px 0 0;
         cursor: pointer;
         border-radius: 3px;
         transition: 0.3s ease-in-out;
         &:hover {
-          background-color: #ddd;
+          background-color: #ffffff6b;
         }
         .action-dots {
           position: absolute;
@@ -88,11 +108,13 @@
         position: absolute;
         bottom: 30px;
         right: 0px;
+        background-color: rgb(255 255 255 / 50%);
+        border: 1px solid #ddd;
         .action-icon {
           display: block;
           cursor: pointer;
           &.edit {
-            margin-bottom: 5px;
+            margin-bottom: 10px;
           }
           img {
             max-width: 16px;
