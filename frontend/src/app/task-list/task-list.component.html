@@ -8,13 +8,13 @@
         >
           <span
             class="plus p-3 rounded-circle bg-dark d-flex align-items-center justify-content-center"
-            (click)="addTask()"
+            (click)="addEditTask('Add')"
           >
             <img src="./plus.png" alt="Add task" class="img-fluid" />
           </span>
           <span
             class="text rounded-2 bg-dark text-white ps-4 pe-3 py-2 d-none d-xl-block"
-            (click)="addTask()"
+            (click)="addEditTask('Add')"
             >Add Task</span
           >
         </div>
@@ -66,7 +66,10 @@
         <label for="done" class="radio-label"> Done </label>
       </div>
     </div>
-    <ul class="task-parent px-0 py-3 d-grid gap-3 flex-wrap">
+    <ul
+      class="task-parent px-0 py-3 d-grid gap-3 flex-wrap"
+      *ngIf="taskList.length"
+    >
       <li
         class="task-item card shadow-sm p-2 d-inline-flex"
         *ngFor="let task of sortedList; let i = index"
@@ -76,12 +79,15 @@
           'bg-todo': task.status === 'To Do'
         }"
       >
-        <div class="title-section pb-1 mb-1" (click)="updateTask(task)">
+        <div
+          class="title-section pb-1 mb-1"
+          (click)="addEditTask('Update', task)"
+        >
           <div class="task-title">{{ task.title }}</div>
         </div>
         <div
           class="desc-section d-flex align-items-start mb-2"
-          (click)="updateTask(task)"
+          (click)="addEditTask('Update', task)"
         >
           <div class="task-description">{{ task.description }}</div>
         </div>
@@ -91,7 +97,7 @@
           <div
             class="task-status"
             title="{{ task.status }}"
-            (click)="updateTask(task)"
+            (click)="addEditTask('Update', task)"
           >
             <span class="status-symbol rounded-2 text-end">{{
               task.status
@@ -103,7 +109,10 @@
               class="action-list p-2 rounded-2 shadow-sm"
               *ngIf="openAction === task._id && clicked !== 0"
             >
-              <span class="action-icon edit" (click)="updateTask(task)">
+              <span
+                class="action-icon edit"
+                (click)="addEditTask('Update', task)"
+              >
                 <img src="./edit.png" alt="Edit Task" />
               </span>
               <span class="action-icon delete" (click)="deleteTask(i)">

@@ -1,4 +1,9 @@
-const Task = require("../models/Tasks")
+const Task = require("../models/Tasks");
+
+const sendResponse = (res, status, message, data = {}) => {
+  const success = status >= 200 && status < 300;
+  res.status(status).json({ success, ...message, ...data });
+};
 
 exports.getTasks = async (req, res) => {
   const { _id, status, title } = req.body;
@@ -11,41 +16,44 @@ exports.getTasks = async (req, res) => {
   filter.deleted = { $ne: true }; // Exclude deleted tasks
 
   try {
+    const totalCount = await Task.countDocuments(filter);
     const tasks = await Task.find(filter);
-    res.status(200).json({ tasks });
+    sendResponse(res, 200, { message: "Tasks retrieved successfully" }, { tasks, totalCount });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    sendResponse(res, 500, { error: error.message });
   }
 };
 
 exports.createTask = async (req, res) => {
-  const { title, description } = req.body;
+  const { title, description, status } = req.body;
   if (!title) {
-    return res.status(400).json({ error: "Title is required" });
+    return sendResponse(res, 400, { error: "Title is required" });
   }
   try {
-    const task = new Task({ title, description });
+    const task = new Task({ title, description, status });
     await task.save();
-    res.status(201).json({ task });
+    sendResponse(res, 201, { message: "Task created successfully" }, { task });
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    sendResponse(res, 400, { error: error.message });
   }
 };
 
 exports.updateTask = async (req, res) => {
-  const { id } = req.params;
-  const { title, description } = req.body;
+  const { _id, title, description, status } = req.body;
+  if (!_id) {
+    return sendResponse(res, 400, { error: "Id is required" });
+  }
   if (!title) {
-    return res.status(400).json({ error: "Title is required" });
+    return sendResponse(res, 400, { error: "Title is required" });
   }
   try {
-    const task = await Task.findByIdAndUpdate(id, { title, description }, { new: true });
+    const task = await Task.findByIdAndUpdate(_id, { title, description, status }, { new: true });
     if (!task) {
-      return res.status(404).json({ error: "Task not found" });
+      return sendResponse(res, 404, { error: "Task not found" });
     }
-    res.status(200).json({ task });
+    sendResponse(res, 200, { message: "Task updated successfully" }, { task });
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    sendResponse(res, 400, { error: error.message });
   }
 };
 
@@ -54,10 +62,10 @@ exports.deleteTask = async (req, res) => {
   try {
     const task = await Task.findByIdAndUpdate(id, { deleted: true }, { new: true });
     if (!task) {
-      return res.status(404).json({ error: "Task not found" });
+      return sendResponse(res, 404, { error: "Task not found" });
     }
-    res.status(200).json({ message: "Task marked as deleted", task });
+    sendResponse(res, 200, { message: "Task marked as deleted" }, { task });
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    sendResponse(res, 400, { error: error.message });
   }
 };

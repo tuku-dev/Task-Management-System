@@ -1,17 +1,21 @@
+import { HttpClientModule } from '@angular/common/http';
 import { Component, Input, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
   FormsModule,
   ReactiveFormsModule,
+  Validators,
 } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { environment } from '../../environments/environment';
+import { TaskService } from '../task.service';
 
 @Component({
   selector: 'app-add-task',
   standalone: true,
-  imports: [ReactiveFormsModule, FormsModule],
+  imports: [ReactiveFormsModule, FormsModule, HttpClientModule],
+  providers: [TaskService],
   templateUrl: './add-task.component.html',
   styleUrl: './add-task.component.scss',
 })
@@ -20,14 +24,18 @@ export class AddTaskComponent implements OnInit {
   addTaskForm: FormGroup | any;
   submitted = false;
   taskData: any;
-  apiUrl = environment.apiUrl;
+  url = environment.apiUrl;
 
-  constructor(public fb: FormBuilder, public dialogRef: NgbActiveModal) {}
+  constructor(
+    public fb: FormBuilder,
+    public dialogRef: NgbActiveModal,
+    private ts: TaskService
+  ) {}
 
   ngOnInit(): void {
     console.log(this.modalData);
     this.addTaskForm = this.fb.group({
-      title: [''],
+      title: ['', Validators.required],
       status: ['To Do'],
       description: [''],
     });
@@ -46,17 +54,40 @@ export class AddTaskComponent implements OnInit {
   }
 
   cancelForm() {
-    this.dialogRef.close({ success: true });
+    this.dialogRef.close({ success: false });
   }
   submitForm() {
     this.submitted = true;
     if (this.addTaskForm.invalid) return;
 
-    const data = {
-      title: this.addTaskForm.value.title,
-      status: this.addTaskForm.value.status,
-      description: this.addTaskForm.value.description,
-    };
-    console.log(data);
+    if (this.taskData && this.taskData._id) {
+      const data = {
+        _id: this.taskData._id,
+        title: this.addTaskForm.value.title,
+        status: this.addTaskForm.value.status,
+        description: this.addTaskForm.value.description,
+      };
+      console.log(data);
+
+      this.ts
+        .postMethod(this.url + 'tasks/update', data)
+        .subscribe((res: any) => {
+          console.log(res);
+          this.dialogRef.close({ success: true });
+        });
+    } else {
+      const data = {
+        title: this.addTaskForm.value.title,
+        status: this.addTaskForm.value.status,
+        description: this.addTaskForm.value.description,
+      };
+      this.ts
+        .postMethod(this.url + 'tasks/create', data)
+        .subscribe((res: any) => {
+          if (res.success) {
+            this.dialogRef.close({ success: true });
+          }
+        });
+    }
   }
 }
