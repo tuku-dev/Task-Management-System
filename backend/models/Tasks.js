@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const TaskHistory = required('./TaskHistory')
+const TaskHistory = require('./TaskHistory')
 
 const taskSchema = new mongoose.Schema({
   title: { type: String, required: true },

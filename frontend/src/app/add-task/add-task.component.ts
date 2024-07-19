@@ -6,6 +6,7 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-add-task',
@@ -19,6 +20,7 @@ export class AddTaskComponent implements OnInit {
   addTaskForm: FormGroup | any;
   submitted = false;
   taskData: any;
+  apiUrl = environment.apiUrl;
 
   constructor(public fb: FormBuilder, public dialogRef: NgbActiveModal) {}
 
@@ -55,5 +57,6 @@ export class AddTaskComponent implements OnInit {
       status: this.addTaskForm.value.status,
       description: this.addTaskForm.value.description,
     };
+    console.log(data);
   }
 }

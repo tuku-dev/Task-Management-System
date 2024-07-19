@@ -1,13 +1,17 @@
 import { CommonModule } from '@angular/common';
-import { Component, NgModule } from '@angular/core';
-import { AddTaskComponent } from '../add-task/add-task.component';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { HttpClientModule } from '@angular/common/http';
+import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { environment } from '../../environments/environment';
+import { AddTaskComponent } from '../add-task/add-task.component';
+import { TaskService } from '../task.service';
 
 @Component({
   selector: 'app-task-list',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, HttpClientModule],
+  providers: [TaskService],
   templateUrl: './task-list.component.html',
   styleUrl: './task-list.component.scss',
 })
@@ -19,10 +23,12 @@ export class TaskListComponent {
   openAction: string | null = null;
   clicked = 0;
   taskSort = 'all';
+  apiUrl = environment.apiUrl + '/tasks';
 
-  constructor(public modalService: NgbModal) {}
+  constructor(public modalService: NgbModal, private ts: TaskService) {}
 
   ngOnInit(): void {
+    this.getTasks();
     this.taskList = [
       {
         _id: '66952f33fc13ae5f072345b2',
@@ -366,6 +372,12 @@ export class TaskListComponent {
       },
     ];
     this.sortTasks();
+  }
+
+  getTasks() {
+    this.ts.getMethod('/tasks/getAll').subscribe((res) => {
+      console.log(res);
+    });
   }
 
   toggleActions(taskId: string) {
