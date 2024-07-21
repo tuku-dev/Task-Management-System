@@ -1,3 +1,5 @@
 $(document).ready(function () {
-  console.log("Document is ready");
+  setTimeout(() => {
+    console.log("Document is ready");
+  }, 1000);
 });

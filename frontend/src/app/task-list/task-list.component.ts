@@ -1,6 +1,12 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { Component } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  Inject,
+  OnInit,
+  PLATFORM_ID,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { environment } from '../../environments/environment';
@@ -10,6 +16,8 @@ import { TaskService } from '../task.service';
 import { ViewTaskComponent } from '../view-task/view-task.component';
 import { StatusPipe } from './status.pipe';
 import { TruncatePipe } from './truncate.pipe';
+
+import $ from 'jquery';
 
 @Component({
   selector: 'app-task-list',
@@ -25,7 +33,7 @@ import { TruncatePipe } from './truncate.pipe';
   templateUrl: './task-list.component.html',
   styleUrl: './task-list.component.scss',
 })
-export class TaskListComponent {
+export class TaskListComponent implements OnInit, AfterViewInit {
   taskList: any = [];
   sortedList = [{ _id: '', title: '', description: '', status: '' }];
   loader = true;
@@ -45,10 +53,28 @@ export class TaskListComponent {
   page = 1;
   pageSize = 10;
 
-  constructor(public modalService: NgbModal, private ts: TaskService) {}
+  constructor(
+    public modalService: NgbModal,
+    private ts: TaskService,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {}
 
   ngOnInit(): void {
     this.getTasks();
+  }
+
+  ngAfterViewInit(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      setTimeout(() => {
+        $(document).on('click', function (e) {
+          $('.action-buttons').addClass('d-none');
+          if ($(e.target).closest('.actions-list').length > 0) {
+            let target = $(e.target).closest('.actions-list');
+            target.next('.action-buttons').removeClass('d-none');
+          }
+        });
+      }, 2000);
+    }
   }
 
   getTasks() {

@@ -231,6 +231,10 @@ $blue-border: 1px solid $blue;
             transform: rotate(90deg);
           }
         }
+        .action-buttons {
+          top: 16px;
+          right: 45px;
+        }
       }
     }
   }

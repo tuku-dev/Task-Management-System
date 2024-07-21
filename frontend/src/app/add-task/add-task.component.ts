@@ -10,11 +10,12 @@ import {
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { environment } from '../../environments/environment';
 import { TaskService } from '../task.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-add-task',
   standalone: true,
-  imports: [ReactiveFormsModule, FormsModule, HttpClientModule],
+  imports: [ReactiveFormsModule, FormsModule, HttpClientModule, CommonModule],
   providers: [TaskService],
   templateUrl: './add-task.component.html',
   styleUrl: './add-task.component.scss',
@@ -42,6 +43,9 @@ export class AddTaskComponent implements OnInit {
       this.taskData = this.modalData.task;
       this.fillData();
     }
+  }
+  get f() {
+    return this.addTaskForm.controls;
   }
 
   fillData() {

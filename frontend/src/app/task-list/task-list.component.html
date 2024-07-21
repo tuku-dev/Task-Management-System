@@ -66,9 +66,9 @@
               <span class="action-dots"></span>
             </div>
             <div
-              class="action-buttons d-flex align-items-center justify-content-end flex-column"
-              *ngIf="openAction === task._id && clicked !== 0"
+              class="action-buttons d-flex align-items-center justify-content-end flex-column d-none"
             >
+              <!-- *ngIf="openAction === task._id && clicked !== 0" -->
               <button class="button btn-view" (click)="viewTask(task)">
                 <img src="./view-blue.png" alt="View Task" /> View
               </button>

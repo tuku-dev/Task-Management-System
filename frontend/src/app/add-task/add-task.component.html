@@ -10,7 +10,14 @@
         id="title"
         placeholder="Task Title"
         formControlName="title"
+        [class.is-invalid]="addTaskForm.controls['title'].invalid && submitted"
       />
+      <div
+        class="invalid-feedback"
+        *ngIf="addTaskForm.controls['title'].invalid && submitted"
+      >
+        Title is required
+      </div>
     </div>
     <div class="status-container mb-3">
       <select
