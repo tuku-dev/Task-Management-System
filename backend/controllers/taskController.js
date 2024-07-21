@@ -5,19 +5,32 @@ const sendResponse = (res, status, message, data = {}) => {
   res.status(status).json({ success, ...message, ...data });
 };
 
+const pageSettings = function (page = 1, perPage = 10) {
+  let pp = parseInt(perPage) ?? 10;
+  let p = parseInt(page) ?? 1;
+
+  const pageSize = pp > 0 ? pp : 10;
+  const start = p > 0 ? p : 1;
+  const skip = pageSize * (start - 1);
+
+  return { pageSize, skip };
+};
+
 exports.getTasks = async (req, res) => {
-  const { _id, status, title } = req.body;
+  const { _id, status, title, page, perPage } = req.body;
   const filter = {};
 
   if (_id) filter._id = _id;
   if (status) filter.status = status;
   if (title) filter.title = { $regex: title, $options: "i" }; // case-insensitive search
+  const ps = pageSettings(page, perPage)
 
   filter.deleted = { $ne: true }; // Exclude deleted tasks
 
   try {
     const totalCount = await Task.countDocuments(filter);
-    const tasks = await Task.find(filter);
+    const tasks = await Task.find(filter).sort({ createdAt: -1 }).skip(ps.skip).limit(ps.pageSize);
+
     sendResponse(res, 200, { message: "Tasks retrieved successfully" }, { tasks, totalCount });
   } catch (error) {
     sendResponse(res, 500, { error: error.message });
@@ -58,9 +71,9 @@ exports.updateTask = async (req, res) => {
 };
 
 exports.deleteTask = async (req, res) => {
-  const { id } = req.params;
+  const { _id } = req.body;
   try {
-    const task = await Task.findByIdAndUpdate(id, { deleted: true }, { new: true });
+    const task = await Task.findByIdAndUpdate(_id, { deleted: true }, { new: true });
     if (!task) {
       return sendResponse(res, 404, { error: "Task not found" });
     }

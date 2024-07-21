@@ -20,48 +20,12 @@
         <option value="progress">In Progress</option>
         <option value="done">Done</option>
       </select>
-      <!-- <div class="radio-group my-3 me-3">
-        <input
-          type="radio"
-          name="task-status"
-          id="all"
-          value="all"
-          class="d-none input-radio"
-          [(ngModel)]="taskSort"
-          (change)="sortTasks()"
-        />
-        <label for="all" class="radio-label"> All </label>
-        <input
-          type="radio"
-          name="task-status"
-          id="todo"
-          value="todo"
-          [(ngModel)]="taskSort"
-          class="d-none input-radio"
-          (change)="sortTasks()"
-        />
-        <label for="todo" class="radio-label"> Todo </label>
-        <input
-          type="radio"
-          name="task-status"
-          id="progress"
-          value="progress"
-          [(ngModel)]="taskSort"
-          class="d-none input-radio"
-          (change)="sortTasks()"
-        />
-        <label for="progress" class="radio-label"> Progress </label>
-        <input
-          type="radio"
-          name="task-status"
-          id="done"
-          value="done"
-          [(ngModel)]="taskSort"
-          class="d-none input-radio"
-          (change)="sortTasks()"
-        />
-        <label for="done" class="radio-label"> Done </label>
-      </div> -->
+      <button
+        class="button clear-filter rounded-2"
+        (click)="status = ''; getTasks()"
+      >
+        Cancel
+      </button>
       <button
         class="button add-task-button rounded-2"
         (click)="addEditTask('Add')"
@@ -72,7 +36,7 @@
     </div>
 
     <table class="table table-hover table-bordered task-table">
-      <thead>
+      <thead class="table-header">
         <tr>
           <th scope="col" style="width: 20%">Title</th>
           <th scope="col" style="width: 10%">Status</th>
@@ -80,11 +44,11 @@
           <th scope="col" style="width: 100px">Actions</th>
         </tr>
       </thead>
-      <tbody>
-        <tr *ngFor="let task of taskList; let i = index">
-          <td>{{ task.title }}</td>
+      <tbody class="table-body">
+        <tr *ngFor="let task of taskList; let i = index" class="task-row">
+          <td class="title">{{ task.title }}</td>
           <td
-            class="text-center"
+            class="text-center task-status"
             [ngClass]="{
               'text-success': task.status === 'done',
               'text-info': task.status === 'progress',
@@ -93,8 +57,8 @@
           >
             {{ task.status | status }}
           </td>
-          <td>{{ task.description | truncate : 100 }}</td>
-          <td class="text-end py-0 actions">
+          <td class="description">{{ task.description | truncate : 100 }}</td>
+          <td class="text-center py-0 actions">
             <div
               class="actions-list d-inline-flex align-items-center justify-content-center mt-1"
               (click)="toggleAction(task._id)"
@@ -114,7 +78,7 @@
               >
                 <img src="./edit-blue.png" alt="Edit Task" /> Edit
               </button>
-              <button class="button btn-delete" (click)="deleteTask(i)">
+              <button class="button btn-delete" (click)="deleteTask(task, i)">
                 <img src="./delete-blue.png" alt="Delete Task" /> Delete
               </button>
             </div>
@@ -122,5 +86,37 @@
         </tr>
       </tbody>
     </table>
+
+    <ul class="pagination" *ngIf="totalCount > 10">
+      <li
+        class="first pagination-item"
+        [ngClass]="{ disabled: page === 1 }"
+        (click)="fetchPage('first')"
+      >
+        First
+      </li>
+      <li
+        class="prev pagination-item"
+        [ngClass]="{ disabled: page === 1 }"
+        (click)="fetchPage('prev')"
+      >
+        Previous
+      </li>
+      <li class="page-number">{{ page }}</li>
+      <li
+        class="next pagination-item"
+        [ngClass]="{ disabled: page === pager }"
+        (click)="fetchPage('next')"
+      >
+        Next
+      </li>
+      <li
+        class="last pagination-item"
+        [ngClass]="{ disabled: page === pager }"
+        (click)="fetchPage('last')"
+      >
+        Last
+      </li>
+    </ul>
   </div>
 </div>

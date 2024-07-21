@@ -5,10 +5,11 @@ import { FormsModule } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { environment } from '../../environments/environment';
 import { AddTaskComponent } from '../add-task/add-task.component';
+import { ConfirmationComponent } from '../confirmation/confirmation.component';
 import { TaskService } from '../task.service';
+import { ViewTaskComponent } from '../view-task/view-task.component';
 import { StatusPipe } from './status.pipe';
 import { TruncatePipe } from './truncate.pipe';
-import { ViewTaskComponent } from '../view-task/view-task.component';
 
 @Component({
   selector: 'app-task-list',
@@ -29,10 +30,7 @@ export class TaskListComponent {
   sortedList = [{ _id: '', title: '', description: '', status: '' }];
   loader = true;
   taskSort: any = '';
-  totalCount = 0;
   url = environment.apiUrl;
-  page = 1;
-  pageSize = 10;
   openAction: string | null = null;
   prevAction = '';
   clicked = 0;
@@ -41,11 +39,11 @@ export class TaskListComponent {
   status = '';
   taskTitle = '';
   filter: any = {};
-  taskStatus = {
-    todo: 'To Do',
-    progress: 'In Progress',
-    done: 'Done',
-  };
+  // pagination
+  totalCount = 0;
+  pager = 0;
+  page = 1;
+  pageSize = 10;
 
   constructor(public modalService: NgbModal, private ts: TaskService) {}
 
@@ -56,17 +54,24 @@ export class TaskListComponent {
   getTasks() {
     if (this.status) {
       this.filter.status = this.status;
+    } else {
+      this.filter.status = '';
     }
-    this.ts
-      .postMethod(this.url + 'tasks/getAll', this.filter)
-      .subscribe((response) => {
-        if (response.success) {
-          console.log(response);
+    this.filter.page = this.page;
+    this.filter.perPage = this.pageSize;
 
+    this.ts.postMethod(this.url + 'tasks/getAll', this.filter).subscribe(
+      (response) => {
+        if (response.success) {
           this.taskList = response.tasks;
           this.totalCount = response.totalCount;
+          this.pager = Math.ceil(this.totalCount / this.pageSize);
         }
-      });
+      },
+      (error) => {
+        this.ts.handleError(error);
+      }
+    );
   }
 
   toggleAction(taskId: string) {
@@ -99,7 +104,27 @@ export class TaskListComponent {
     );
   }
 
-  deleteTask(index: number) {}
+  deleteTask(task: any, index: number) {
+    let modalRef = this.modalService.open(ConfirmationComponent, {
+      centered: true,
+    });
+    modalRef.componentInstance.modalData = task;
+    modalRef.result.then(
+      (result) => {
+        if (result.success) {
+          console.log(result);
+          this.ts
+            .postMethod(this.url + 'tasks/delete', { _id: task._id })
+            .subscribe((response) => {
+              if (response.success) {
+                this.getTasks();
+              }
+            });
+        }
+      },
+      () => {}
+    );
+  }
   viewTask(task: any) {
     let modalRef = this.modalService.open(ViewTaskComponent, {
       centered: true,
@@ -113,5 +138,19 @@ export class TaskListComponent {
       },
       () => {}
     );
+  }
+
+  fetchPage(type: any) {
+    if (type === 'first') {
+      this.page = 1;
+    } else if (type === 'last') {
+      this.page = this.pager;
+    } else if (type === 'prev' && this.page > 1) {
+      this.page--;
+    } else if (type === 'next' && this.page < this.pager) {
+      this.page++;
+    }
+
+    this.getTasks();
   }
 }

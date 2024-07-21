@@ -33,10 +33,9 @@ export class AddTaskComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    console.log(this.modalData);
     this.addTaskForm = this.fb.group({
       title: ['', Validators.required],
-      status: ['To Do'],
+      status: ['todo'],
       description: [''],
     });
     if (this.modalData.task && this.modalData.task._id) {
@@ -69,25 +68,32 @@ export class AddTaskComponent implements OnInit {
       };
       console.log(data);
 
-      this.ts
-        .postMethod(this.url + 'tasks/update', data)
-        .subscribe((res: any) => {
-          console.log(res);
-          this.dialogRef.close({ success: true });
-        });
+      this.ts.postMethod(this.url + 'tasks/update', data).subscribe(
+        (response) => {
+          if (response.success) {
+            this.dialogRef.close({ success: true });
+          }
+        },
+        (error) => {
+          this.ts.handleError(error);
+        }
+      );
     } else {
       const data = {
         title: this.addTaskForm.value.title,
         status: this.addTaskForm.value.status,
         description: this.addTaskForm.value.description,
       };
-      this.ts
-        .postMethod(this.url + 'tasks/create', data)
-        .subscribe((res: any) => {
-          if (res.success) {
+      this.ts.postMethod(this.url + 'tasks/create', data).subscribe(
+        (response) => {
+          if (response.success) {
             this.dialogRef.close({ success: true });
           }
-        });
+        },
+        (error) => {
+          this.ts.handleError(error);
+        }
+      );
     }
   }
 }
