@@ -3,7 +3,7 @@ const TaskHistory = require('./TaskHistory')
 
 const taskSchema = new mongoose.Schema({
   title: { type: String, required: true },
-  status: { type: String, enum: ["To Do", "In Progress", "Done"], default: 'To Do' },
+  status: { type: String, enum: ["todo", "progress", "done"], default: 'todo' },
   description: { type: String, default: '' },
   deleted: { type: Boolean, default: false }
 })

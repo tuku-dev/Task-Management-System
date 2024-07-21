@@ -1,29 +1,26 @@
 <div class="main-wrapper py-3">
   <div class="header border-bottom mb-2 pb-2">
     <div class="container">
-      <div class="d-flex align-items-center justify-content-between">
-        <h1 class="heading-1">Task Management</h1>
-        <div
-          class="add-task-button d-flex align-items-center justify-content-center"
-        >
-          <span
-            class="plus p-3 rounded-circle bg-dark d-flex align-items-center justify-content-center"
-            (click)="addEditTask('Add')"
-          >
-            <img src="./plus.png" alt="Add task" class="img-fluid" />
-          </span>
-          <span
-            class="text rounded-2 bg-dark text-white ps-4 pe-3 py-2 d-none d-xl-block"
-            (click)="addEditTask('Add')"
-            >Add Task</span
-          >
-        </div>
-      </div>
+      <h1 class="heading-1 text-center">Task Management</h1>
     </div>
   </div>
   <div class="container">
-    <div class="d-flex align-items-center justify-content-end task-filter">
-      <div class="radio-group my-3">
+    <div
+      class="d-flex align-items-center justify-content-end task-filter mb-3 gap-3"
+    >
+      <select
+        name="status"
+        id="status"
+        [(ngModel)]="status"
+        class="form-select status"
+        (change)="getTasks()"
+      >
+        <option value="">All</option>
+        <option value="todo">To do</option>
+        <option value="progress">In Progress</option>
+        <option value="done">Done</option>
+      </select>
+      <!-- <div class="radio-group my-3 me-3">
         <input
           type="radio"
           name="task-status"
@@ -64,64 +61,66 @@
           (change)="sortTasks()"
         />
         <label for="done" class="radio-label"> Done </label>
-      </div>
-    </div>
-    <ul
-      class="task-parent px-0 py-3 d-grid gap-3 flex-wrap"
-      *ngIf="taskList.length"
-    >
-      <li
-        class="task-item card shadow-sm p-2 d-inline-flex"
-        *ngFor="let task of sortedList; let i = index"
-        [ngClass]="{
-          'bg-done': task.status === 'Done',
-          'bg-progress': task.status === 'In Progress',
-          'bg-todo': task.status === 'To Do'
-        }"
+      </div> -->
+      <button
+        class="button add-task-button rounded-2"
+        (click)="addEditTask('Add')"
       >
-        <div
-          class="title-section pb-1 mb-1"
-          (click)="addEditTask('Update', task)"
-        >
-          <div class="task-title">{{ task.title }}</div>
-        </div>
-        <div
-          class="desc-section d-flex align-items-start mb-2"
-          (click)="addEditTask('Update', task)"
-        >
-          <div class="task-description">{{ task.description }}</div>
-        </div>
-        <div
-          class="footer mt-auto d-flex align-items-center justify-content-between"
-        >
-          <div
-            class="task-status"
-            title="{{ task.status }}"
-            (click)="addEditTask('Update', task)"
+        <img src="./plus-blue.png" alt="Add Task" class="img-fluid" />
+        Add Task
+      </button>
+    </div>
+
+    <table class="table table-hover table-bordered task-table">
+      <thead>
+        <tr>
+          <th scope="col" style="width: 20%">Title</th>
+          <th scope="col" style="width: 10%">Status</th>
+          <th scope="col" style="width: 62%">Description</th>
+          <th scope="col" style="width: 100px">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let task of taskList; let i = index">
+          <td>{{ task.title }}</td>
+          <td
+            class="text-center"
+            [ngClass]="{
+              'text-success': task.status === 'done',
+              'text-info': task.status === 'progress',
+              'text-danger': task.status === 'todo'
+            }"
           >
-            <span class="status-symbol rounded-2 text-end">{{
-              task.status
-            }}</span>
-          </div>
-          <div class="actions mb-0 mt-auto" (click)="toggleActions(task._id)">
-            <span class="action-dots rounded-circle"></span>
+            {{ task.status | status }}
+          </td>
+          <td>{{ task.description | truncate : 100 }}</td>
+          <td class="text-end py-0 actions">
             <div
-              class="action-list p-2 rounded-2 shadow-sm"
+              class="actions-list d-inline-flex align-items-center justify-content-center mt-1"
+              (click)="toggleAction(task._id)"
+            >
+              <span class="action-dots"></span>
+            </div>
+            <div
+              class="action-buttons d-flex align-items-center justify-content-end flex-column"
               *ngIf="openAction === task._id && clicked !== 0"
             >
-              <span
-                class="action-icon edit"
+              <button class="button btn-view" (click)="viewTask(task)">
+                <img src="./view-blue.png" alt="View Task" /> View
+              </button>
+              <button
+                class="button btn-edit"
                 (click)="addEditTask('Update', task)"
               >
-                <img src="./edit.png" alt="Edit Task" />
-              </span>
-              <span class="action-icon delete" (click)="deleteTask(i)">
-                <img src="./delete.png" alt="Delete Task" />
-              </span>
+                <img src="./edit-blue.png" alt="Edit Task" /> Edit
+              </button>
+              <button class="button btn-delete" (click)="deleteTask(i)">
+                <img src="./delete-blue.png" alt="Delete Task" /> Delete
+              </button>
             </div>
-          </div>
-        </div>
-      </li>
-    </ul>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </div>

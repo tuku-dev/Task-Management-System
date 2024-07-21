@@ -6,25 +6,46 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { environment } from '../../environments/environment';
 import { AddTaskComponent } from '../add-task/add-task.component';
 import { TaskService } from '../task.service';
+import { StatusPipe } from './status.pipe';
+import { TruncatePipe } from './truncate.pipe';
+import { ViewTaskComponent } from '../view-task/view-task.component';
 
 @Component({
   selector: 'app-task-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, HttpClientModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    HttpClientModule,
+    TruncatePipe,
+    StatusPipe,
+  ],
   providers: [TaskService],
   templateUrl: './task-list.component.html',
   styleUrl: './task-list.component.scss',
 })
 export class TaskListComponent {
-  taskList = [{ _id: '', title: '', description: '', status: '' }];
+  taskList: any = [];
   sortedList = [{ _id: '', title: '', description: '', status: '' }];
   loader = true;
-  prevAction = '';
-  openAction: string | null = null;
-  clicked = 0;
-  taskSort = 'all';
+  taskSort: any = '';
   totalCount = 0;
   url = environment.apiUrl;
+  page = 1;
+  pageSize = 10;
+  openAction: string | null = null;
+  prevAction = '';
+  clicked = 0;
+  hoverClass = '';
+  taskId = '';
+  status = '';
+  taskTitle = '';
+  filter: any = {};
+  taskStatus = {
+    todo: 'To Do',
+    progress: 'In Progress',
+    done: 'Done',
+  };
 
   constructor(public modalService: NgbModal, private ts: TaskService) {}
 
@@ -33,16 +54,22 @@ export class TaskListComponent {
   }
 
   getTasks() {
-    this.ts.postMethod(this.url + 'tasks/getAll', {}).subscribe((response) => {
-      if (response.success) {
-        this.taskList = response.tasks;
-        this.totalCount = response.totalCount;
-        this.sortTasks();
-      }
-    });
+    if (this.status) {
+      this.filter.status = this.status;
+    }
+    this.ts
+      .postMethod(this.url + 'tasks/getAll', this.filter)
+      .subscribe((response) => {
+        if (response.success) {
+          console.log(response);
+
+          this.taskList = response.tasks;
+          this.totalCount = response.totalCount;
+        }
+      });
   }
 
-  toggleActions(taskId: string) {
+  toggleAction(taskId: string) {
     this.openAction = taskId;
     if (this.prevAction === taskId) {
       this.clicked = 0;
@@ -51,32 +78,6 @@ export class TaskListComponent {
       this.clicked = 1;
       this.prevAction = taskId;
     }
-  }
-
-  sortTasks() {
-    let sortFilter = '';
-    switch (this.taskSort) {
-      case 'todo':
-        sortFilter = 'To Do';
-        break;
-      case 'progress':
-        sortFilter = 'In Progress';
-        break;
-      case 'done':
-        sortFilter = 'Done';
-        break;
-      default:
-        sortFilter = 'all';
-        break;
-    }
-
-    this.sortedList = this.taskList.filter((task) => {
-      if (sortFilter === 'all') {
-        return true;
-      } else {
-        return task.status === sortFilter;
-      }
-    });
   }
 
   addEditTask(type: string, task?: any | {}) {
@@ -99,4 +100,18 @@ export class TaskListComponent {
   }
 
   deleteTask(index: number) {}
+  viewTask(task: any) {
+    let modalRef = this.modalService.open(ViewTaskComponent, {
+      centered: true,
+    });
+    modalRef.componentInstance.modalData = task;
+    modalRef.result.then(
+      (result) => {
+        if (result.success) {
+          this.addEditTask('Update', task);
+        }
+      },
+      () => {}
+    );
+  }
 }

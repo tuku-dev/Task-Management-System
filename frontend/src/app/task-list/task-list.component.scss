@@ -6,25 +6,6 @@ $todo1: #f9e6e8;
 $todo2: #fba0a8;
 $radio: #057187;
 
-.header {
-  .add-task-button {
-    .plus {
-      width: 50px;
-      height: 50px;
-      padding: 10px;
-      img {
-        filter: invert(100%);
-        cursor: pointer;
-      }
-    }
-    .text {
-      font-size: 16px;
-      margin-left: -15px;
-      line-height: 1;
-      cursor: pointer;
-    }
-  }
-}
 .radio-group {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -34,6 +15,11 @@ $radio: #057187;
     text-align: center;
     color: $radio;
     border-radius: 5px 0 0 5px;
+    transition: all 0.3s ease;
+    &:hover {
+      background-color: $radio;
+      color: var(--bs-white);
+    }
     ~ .radio-label {
       border-left: 0;
       border-radius: 0;
@@ -47,98 +33,125 @@ $radio: #057187;
     color: var(--bs-white);
   }
 }
-.task-parent {
-  @media (min-width: 768px) {
-    grid-template-columns: repeat(2, 1fr);
+.status {
+  border-color: $radio;
+  color: $radio;
+  max-width: 200px;
+  &:focus {
+    border-color: $radio;
+    box-shadow: 0 0 0 0.25rem rgba(5, 113, 135, 0.25);
   }
-  @media (min-width: 992px) {
-    grid-template-columns: repeat(3, 1fr);
+}
+.add-task-button {
+  background-color: var(--bs-white);
+  border: 1px solid $radio;
+  color: $radio;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 14px;
+  img {
+    max-width: 16px;
+    display: block;
+    margin-right: 5px;
   }
-  @media (min-width: 1400px) {
-    grid-template-columns: repeat(4, 1fr);
+  &:hover {
+    background-color: $radio;
+    color: var(--bs-white);
+    img {
+      filter: brightness(0) invert(1);
+    }
   }
+}
 
-  .task-item {
-    white-space: normal;
-    width: 100%;
-    &.bg {
-      &-done {
-        background-color: $done1;
-        border-color: $done2;
-      }
-      &-progress {
-        background-color: $progress1;
-        border-color: $progress2;
-      }
-      &-todo {
-        background-color: $todo1;
-        border-color: $todo2;
-      }
-    }
-    .title-section {
-      .task-title {
-        padding-right: 5px;
-        flex: 1 1 0;
-        font-size: 16px;
-        font-weight: 500;
-      }
-    }
-    .desc-section {
+.task-table {
+  th {
+    text-align: center;
+  }
+  .actions {
+    position: relative;
+    .actions-list {
       position: relative;
-      .task-description {
-        flex: 1 1 0;
-        // min-height: 110px;
-        padding-right: 5px;
-        font-size: 14px;
-        font-weight: 400;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 24px;
+      cursor: pointer;
+      .action-dots {
+        position: relative;
+        width: 30px;
+        height: 18px;
+        display: block;
+        background-color: $radio;
+        border-radius: 5px;
+
+        &::before,
+        &::after {
+          content: "";
+          position: absolute;
+          height: 4px;
+          width: 4px;
+          background-color: var(--bs-white);
+          top: 0;
+          bottom: 0;
+          margin: auto;
+          border-radius: 5px;
+        }
+        &::before {
+          left: 20%;
+          box-shadow: 7px 0 0 0 var(--bs-white);
+        }
+        &::after {
+          right: 20%;
+        }
       }
     }
-    .footer {
-      .task-status {
-        .status-symbol {
-          display: block;
-          cursor: pointer;
-          font-size: 12px;
-        }
-      }
-      .actions {
-        position: relative;
-        // background-color: #eee;
-        height: 25px;
-        flex: 14px 0 0;
-        cursor: pointer;
-        border-radius: 3px;
-        transition: 0.3s ease-in-out;
-        &:hover {
-          background-color: #ffffff6b;
-        }
-        .action-dots {
-          position: absolute;
-          width: 4px;
-          height: 4px;
-          background-color: var(--bs-gray);
-          box-shadow:
-            0px 6px 0 0px var(--bs-gray),
-            0px 12px 0 0px var(--bs-gray);
-          top: 4px;
-          left: 5px;
-        }
-      }
-      .action-list {
+    .action-buttons {
+      position: absolute;
+      z-index: 10;
+      top: 6px;
+      right: 50px;
+      width: 140px;
+      background: $radio;
+      border-radius: 5px 0 5px 5px;
+      border: 1px solid $radio;
+      &::after {
+        content: "";
         position: absolute;
-        bottom: 30px;
-        right: 0px;
-        background-color: rgb(255 255 255 / 50%);
-        border: 1px solid #ddd;
-        .action-icon {
-          display: block;
-          cursor: pointer;
-          &.edit {
-            margin-bottom: 10px;
-          }
+        top: 0;
+        width: 0;
+        height: 0;
+        right: -19px;
+        border: 9px solid transparent;
+        border-left-color: $radio;
+      }
+      button {
+        width: 100%;
+        &.button {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 3px;
+          border: 1px solid transparent;
+          border-bottom-color: rgba(var(--bs-white), 0.7);
+          background: transparent;
+          color: var(--bs-white);
+          padding: 5px;
           img {
             max-width: 16px;
             display: block;
+            filter: brightness(0) invert(1);
+          }
+          // &:hover {
+          //   background: rgba(var(--bs-white), 0.7);
+          //   color: $radio;
+          //   img {
+          //     filter: none;
+          //   }
+          // }
+          &:last-child {
+            border-bottom-color: transparent;
           }
         }
       }
