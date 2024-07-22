@@ -10,5 +10,5 @@ import { LoaderComponent } from './loader/loader.component';
   styleUrl: './app.component.scss',
 })
 export class AppComponent {
-  title = 'frontend';
+  title = 'Task Management';
 }
