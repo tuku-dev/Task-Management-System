@@ -18,6 +18,7 @@ import { StatusPipe } from './status.pipe';
 import { TruncatePipe } from './truncate.pipe';
 
 import $ from 'jquery';
+import { LoaderComponent } from '../loader/loader.component';
 
 @Component({
   selector: 'app-task-list',
@@ -28,6 +29,7 @@ import $ from 'jquery';
     HttpClientModule,
     TruncatePipe,
     StatusPipe,
+    LoaderComponent,
   ],
   providers: [TaskService],
   templateUrl: './task-list.component.html',
@@ -47,6 +49,7 @@ export class TaskListComponent implements OnInit, AfterViewInit {
   status = '';
   taskTitle = '';
   filter: any = {};
+  isLoading: boolean = true;
   // pagination
   totalCount = 0;
   pager = 0;
@@ -55,7 +58,7 @@ export class TaskListComponent implements OnInit, AfterViewInit {
 
   constructor(
     public modalService: NgbModal,
-    private ts: TaskService,
+    public ts: TaskService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
@@ -78,6 +81,7 @@ export class TaskListComponent implements OnInit, AfterViewInit {
   }
 
   getTasks() {
+    this.isLoading = true;
     if (this.status) {
       this.filter.status = this.status;
     } else {
@@ -92,23 +96,14 @@ export class TaskListComponent implements OnInit, AfterViewInit {
           this.taskList = response.tasks;
           this.totalCount = response.totalCount;
           this.pager = Math.ceil(this.totalCount / this.pageSize);
+          this.isLoading = false;
         }
       },
       (error) => {
         this.ts.handleError(error);
+        this.isLoading = false;
       }
     );
-  }
-
-  toggleAction(taskId: string) {
-    this.openAction = taskId;
-    if (this.prevAction === taskId) {
-      this.clicked = 0;
-      this.prevAction = '';
-    } else {
-      this.clicked = 1;
-      this.prevAction = taskId;
-    }
   }
 
   addEditTask(type: string, task?: any | {}) {
@@ -122,6 +117,7 @@ export class TaskListComponent implements OnInit, AfterViewInit {
     };
     modalRef.result.then(
       (result) => {
+        this.isLoading = true;
         if (result.success) {
           this.getTasks();
         }
@@ -137,6 +133,7 @@ export class TaskListComponent implements OnInit, AfterViewInit {
     modalRef.componentInstance.modalData = task;
     modalRef.result.then(
       (result) => {
+        this.isLoading = true;
         if (result.success) {
           console.log(result);
           this.ts
@@ -144,6 +141,7 @@ export class TaskListComponent implements OnInit, AfterViewInit {
             .subscribe((response) => {
               if (response.success) {
                 this.getTasks();
+                this.isLoading = false;
               }
             });
         }

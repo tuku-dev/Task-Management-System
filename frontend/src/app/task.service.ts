@@ -8,6 +8,7 @@ import { ErrorHandleComponent } from './error-handle/error-handle.component';
   providedIn: 'root',
 })
 export class TaskService {
+  _isLoading: boolean = true;
   constructor(private http: HttpClient, public modalService: NgbModal) {}
 
   postMethod(url = '', data: any): Observable<any> {
@@ -19,5 +20,13 @@ export class TaskService {
       centered: true,
     });
     modalRef.componentInstance.modalData = error;
+  }
+
+  get isLoading(): boolean {
+    return this._isLoading;
+  }
+
+  set isLoading(value: boolean) {
+    this._isLoading = value;
   }
 }

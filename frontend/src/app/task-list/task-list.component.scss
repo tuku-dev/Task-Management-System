@@ -13,6 +13,11 @@ $blue-border: 1px solid $blue;
   justify-content: center;
 }
 
+.main-wrapper {
+  background-color: #f5f5f5;
+  min-height: 100vh;
+}
+
 .status {
   border-color: $blue;
   color: $blue;
@@ -195,6 +200,7 @@ $blue-border: 1px solid $blue;
       display: grid;
       grid-template-columns: auto 80px;
       border-left: 1px solid var(--bs-border-color);
+      background-color: var(--bs-white);
       &:hover {
         td {
           background-color: transparent;

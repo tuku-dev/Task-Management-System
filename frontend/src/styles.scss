@@ -2,3 +2,8 @@
 
 /* Importing Bootstrap SCSS file. */
 @import "bootstrap/scss/bootstrap";
+
+img {
+  max-width: 20px;
+  max-height: auto;
+}

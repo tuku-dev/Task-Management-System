@@ -1,3 +1,4 @@
+<app-loader [isLoading]="isLoading"></app-loader>
 <div class="main-wrapper py-3">
   <div class="header border-bottom mb-2 pb-2">
     <div class="container">
@@ -38,30 +39,34 @@
     <table class="table table-hover table-bordered task-table">
       <thead class="table-header">
         <tr>
-          <th scope="col" style="width: 20%">Title</th>
-          <th scope="col" style="width: 10%">Status</th>
-          <th scope="col" style="width: 62%">Description</th>
+          <th scope="col" style="width: 25%">Title</th>
+          <th scope="col" style="width: 75%">Description</th>
           <th scope="col" style="width: 100px">Actions</th>
         </tr>
       </thead>
       <tbody class="table-body">
         <tr *ngFor="let task of taskList; let i = index" class="task-row">
-          <td class="title">{{ task.title }}</td>
-          <td
-            class="text-center task-status"
-            [ngClass]="{
-              'text-success': task.status === 'done',
-              'text-info': task.status === 'progress',
-              'text-danger': task.status === 'todo'
-            }"
-          >
-            {{ task.status | status }}
+          <td class="title">
+            <div
+              class="d-flex align-items-center justify-content-between gap-2"
+            >
+              <div class="the-title">{{ task.title }}</div>
+              <div
+                class="badge small text-black"
+                [ngClass]="{
+                  'bg-success-subtle': task.status === 'done',
+                  'bg-primary-subtle': task.status === 'progress',
+                  'bg-danger-subtle': task.status === 'todo'
+                }"
+              >
+                {{ task.status | status }}
+              </div>
+            </div>
           </td>
           <td class="description">{{ task.description | truncate : 100 }}</td>
           <td class="text-center py-0 actions">
             <div
               class="actions-list d-inline-flex align-items-center justify-content-center mt-1"
-              (click)="toggleAction(task._id)"
             >
               <span class="action-dots"></span>
             </div>
